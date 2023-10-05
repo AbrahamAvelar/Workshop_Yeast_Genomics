@@ -57,13 +57,8 @@ It will take about 15 minutes to download the files.
 
 ```bash
 cd ~/dc_workshop/data/untrimmed_fastq
-```
-
-:::::::::::::::::::::::::::::::::::::::::  callout
-
-```bash
 ls
-:::::::::::::::::::::::::::::::::::::::::  callout
+```
 
 ```output
 YMX005645_R1.fastq
@@ -383,16 +378,16 @@ You will see an automatically updating output message telling you the
 progress of the analysis. It will start like this:
 
 ```output
-Started analysis of SRR2584863_1.fastq
-Approx 5% complete for SRR2584863_1.fastq
-Approx 10% complete for SRR2584863_1.fastq
-Approx 15% complete for SRR2584863_1.fastq
-Approx 20% complete for SRR2584863_1.fastq
-Approx 25% complete for SRR2584863_1.fastq
-Approx 30% complete for SRR2584863_1.fastq
-Approx 35% complete for SRR2584863_1.fastq
-Approx 40% complete for SRR2584863_1.fastq
-Approx 45% complete for SRR2584863_1.fastq
+Started analysis of YMX005645_R1.fastq
+Approx 5% complete for YMX005645_R1.fastq
+Approx 10% complete for YMX005645_R1.fastq
+Approx 15% complete for YMX005645_R1.fastq
+Approx 20% complete for YMX005645_R1.fastq
+Approx 25% complete for YMX005645_R1.fastq
+Approx 30% complete for YMX005645_R1.fastq
+Approx 35% complete for YMX005645_R1.fastq
+Approx 40% complete for YMX005645_R1.fastq
+Approx 45% complete for YMX005645_R1.fastq
 ```
 
 In total, it should take about five minutes for FastQC to run on all
@@ -400,11 +395,11 @@ six of our FASTQ files. When the analysis completes, your prompt
 will return. So your screen will look something like this:
 
 ```output
-Approx 80% complete for SRR2589044_2.fastq.gz
-Approx 85% complete for SRR2589044_2.fastq.gz
-Approx 90% complete for SRR2589044_2.fastq.gz
-Approx 95% complete for SRR2589044_2.fastq.gz
-Analysis complete for SRR2589044_2.fastq.gz
+Approx 80% complete for YMX005645_R2un.trimmed.fastq
+Approx 85% complete for YMX005645_R2un.trimmed.fastq
+Approx 90% complete for YMX005645_R2un.trimmed.fastq
+Approx 95% complete for YMX005645_R2un.trimmed.fastq
+Analysis complete for YMX005645_R2un.trimmed.fastq
 $
 ```
 
@@ -416,12 +411,12 @@ $ ls
 ```
 
 ```output
-SRR2584863_1.fastq        SRR2584866_1_fastqc.html  SRR2589044_1_fastqc.html
-SRR2584863_1_fastqc.html  SRR2584866_1_fastqc.zip   SRR2589044_1_fastqc.zip
-SRR2584863_1_fastqc.zip   SRR2584866_1.fastq.gz     SRR2589044_1.fastq.gz
-SRR2584863_2_fastqc.html  SRR2584866_2_fastqc.html  SRR2589044_2_fastqc.html
-SRR2584863_2_fastqc.zip   SRR2584866_2_fastqc.zip   SRR2589044_2_fastqc.zip
-SRR2584863_2.fastq.gz     SRR2584866_2.fastq.gz     SRR2589044_2.fastq.gz
+YMX005645_R1.fastq        
+YMX005645_R1_fastqc.html 
+YMX005645_R1_fastqc.zip  
+YMX005645_R2.fastq
+YMX005645_R2_fastqc.html 
+YMX005645_R2_fastqc.zip  
 ```
 
 For each input FASTQ file, FastQC has created a `.zip` file and a
@@ -518,12 +513,8 @@ directory we just created `~/Desktop/fastqc_html`.
 You should see a status output like this:
 
 ```output
-SRR2584863_1_fastqc.html                      100%  249KB 152.3KB/s   00:01
-SRR2584863_2_fastqc.html                      100%  254KB 219.8KB/s   00:01
-SRR2584866_1_fastqc.html                      100%  254KB 271.8KB/s   00:00
-SRR2584866_2_fastqc.html                      100%  251KB 252.8KB/s   00:00
-SRR2589044_1_fastqc.html                      100%  249KB 370.1KB/s   00:00
-SRR2589044_2_fastqc.html                      100%  251KB 592.2KB/s   00:00
+YMX005645_R1.fastqc.html                      100%  249KB 152.3KB/s   00:01
+YMX005645_R2.fastqc.html                      100%  249KB 152.3KB/s   00:01
 ```
 
 Now we can go to our new directory and open the 6 HTML files.
