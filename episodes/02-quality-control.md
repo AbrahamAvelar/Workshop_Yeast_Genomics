@@ -411,12 +411,7 @@ $ ls
 ```
 
 ```output
-YMX005645_R1.fastq        
-YMX005645_R1_fastqc.html 
-YMX005645_R1_fastqc.zip  
-YMX005645_R2.fastq
-YMX005645_R2_fastqc.html 
-YMX005645_R2_fastqc.zip  
+YMX005645_R1.fastq  YMX005645_R1_fastqc.html  YMX005645_R1_fastqc.zip  YMX005645_R2.fastq  YMX005645_R2_fastqc.html  YMX005645_R2_fastqc.zip
 ```
 
 For each input FASTQ file, FastQC has created a `.zip` file and a
@@ -573,10 +568,7 @@ $ ls
 ```
 
 ```output
-SRR2584863_1_fastqc.html  SRR2584866_1_fastqc.html  SRR2589044_1_fastqc.html
-SRR2584863_1_fastqc.zip   SRR2584866_1_fastqc.zip   SRR2589044_1_fastqc.zip
-SRR2584863_2_fastqc.html  SRR2584866_2_fastqc.html  SRR2589044_2_fastqc.html
-SRR2584863_2_fastqc.zip   SRR2584866_2_fastqc.zip   SRR2589044_2_fastqc.zip
+YMX005645_R1_fastqc.html  YMX005645_R1_fastqc.zip  YMX005645_R2_fastqc.html  YMX005645_R2_fastqc.zip
 ```
 
 Our `.zip` files are compressed files. They each contain multiple
@@ -590,12 +582,8 @@ $ unzip *.zip
 ```
 
 ```output
-Archive:  SRR2584863_1_fastqc.zip
-caution: filename not matched:  SRR2584863_2_fastqc.zip
-caution: filename not matched:  SRR2584866_1_fastqc.zip
-caution: filename not matched:  SRR2584866_2_fastqc.zip
-caution: filename not matched:  SRR2589044_1_fastqc.zip
-caution: filename not matched:  SRR2589044_2_fastqc.zip
+Archive:  YMX005645_R1_fastqc.zip
+caution: filename not matched:  YMX005645_R2_fastqc.zip
 ```
 
 This did not work. We unzipped the first file and then got a warning
@@ -619,36 +607,33 @@ In this example, the input is six filenames (one filename for each of our `.zip`
 Each time the loop iterates, it will assign a file name to the variable `filename`
 and run the `unzip` command.
 The first time through the loop,
-`$filename` is `SRR2584863_1_fastqc.zip`.
-The interpreter runs the command `unzip` on `SRR2584863_1_fastqc.zip`.
+`$filename` is `YMX005645_R1_fastqc.zip`.
+The interpreter runs the command `unzip` on `YMX005645_R1_fastqc.zip`.
 For the second iteration, `$filename` becomes
-`SRR2584863_2_fastqc.zip`. This time, the shell runs `unzip` on `SRR2584863_2_fastqc.zip`.
-It then repeats this process for the four other `.zip` files in our directory.
+`YMX005645_R2_fastqc.zip`. This time, the shell runs `unzip` on `YMX005645_R2_fastqc.zip`.
 
 When we run our `for` loop, you will see output that starts like this:
 
-```output
-Archive:  SRR2589044_2_fastqc.zip
-   creating: SRR2589044_2_fastqc/
-   creating: SRR2589044_2_fastqc/Icons/
-   creating: SRR2589044_2_fastqc/Images/
-  inflating: SRR2589044_2_fastqc/Icons/fastqc_icon.png
-  inflating: SRR2589044_2_fastqc/Icons/warning.png
-  inflating: SRR2589044_2_fastqc/Icons/error.png
-  inflating: SRR2589044_2_fastqc/Icons/tick.png
-  inflating: SRR2589044_2_fastqc/summary.txt
-  inflating: SRR2589044_2_fastqc/Images/per_base_quality.png
-  inflating: SRR2589044_2_fastqc/Images/per_tile_quality.png
-  inflating: SRR2589044_2_fastqc/Images/per_sequence_quality.png
-  inflating: SRR2589044_2_fastqc/Images/per_base_sequence_content.png
-  inflating: SRR2589044_2_fastqc/Images/per_sequence_gc_content.png
-  inflating: SRR2589044_2_fastqc/Images/per_base_n_content.png
-  inflating: SRR2589044_2_fastqc/Images/sequence_length_distribution.png
-  inflating: SRR2589044_2_fastqc/Images/duplication_levels.png
-  inflating: SRR2589044_2_fastqc/Images/adapter_content.png
-  inflating: SRR2589044_2_fastqc/fastqc_report.html
-  inflating: SRR2589044_2_fastqc/fastqc_data.txt
-  inflating: SRR2589044_2_fastqc/fastqc.fo
+```outputArchive:  YMX005645_R1_fastqc.zip
+   creating: YMX005645_R1_fastqc/
+   creating: YMX005645_R1_fastqc/Icons/
+   creating: YMX005645_R1_fastqc/Images/
+  inflating: YMX005645_R1_fastqc/Icons/fastqc_icon.png  
+  inflating: YMX005645_R1_fastqc/Icons/warning.png  
+  inflating: YMX005645_R1_fastqc/Icons/error.png  
+  inflating: YMX005645_R1_fastqc/Icons/tick.png  
+  inflating: YMX005645_R1_fastqc/summary.txt  
+  inflating: YMX005645_R1_fastqc/Images/per_base_quality.png  
+  inflating: YMX005645_R1_fastqc/Images/per_sequence_quality.png  
+  inflating: YMX005645_R1_fastqc/Images/per_base_sequence_content.png  
+  inflating: YMX005645_R1_fastqc/Images/per_sequence_gc_content.png  
+  inflating: YMX005645_R1_fastqc/Images/per_base_n_content.png  
+  inflating: YMX005645_R1_fastqc/Images/sequence_length_distribution.png  
+  inflating: YMX005645_R1_fastqc/Images/duplication_levels.png  
+  inflating: YMX005645_R1_fastqc/Images/adapter_content.png  
+  inflating: YMX005645_R1_fastqc/fastqc_report.html  
+  inflating: YMX005645_R1_fastqc/fastqc_data.txt  
+  inflating: YMX005645_R1_fastqc/fastqc.fo  
 ```
 
 The `unzip` program is decompressing the `.zip` files and creating
@@ -661,12 +646,8 @@ are a lot of files here. The one we are going to focus on is the
 If you list the files in our directory now you will see:
 
 ```
-SRR2584863_1_fastqc       SRR2584866_1_fastqc       SRR2589044_1_fastqc
-SRR2584863_1_fastqc.html  SRR2584866_1_fastqc.html  SRR2589044_1_fastqc.html
-SRR2584863_1_fastqc.zip   SRR2584866_1_fastqc.zip   SRR2589044_1_fastqc.zip
-SRR2584863_2_fastqc       SRR2584866_2_fastqc       SRR2589044_2_fastqc
-SRR2584863_2_fastqc.html  SRR2584866_2_fastqc.html  SRR2589044_2_fastqc.html
-SRR2584863_2_fastqc.zip   SRR2584866_2_fastqc.zip   SRR2589044_2_fastqc.zip
+YMX005645_R1_fastqc       YMX005645_R1_fastqc.zip  YMX005645_R2_fastqc.html
+YMX005645_R1_fastqc.html  YMX005645_R2_fastqc      YMX005645_R2_fastqc.zip
 ```
 {:. output}
 
@@ -679,18 +660,14 @@ $ ls -F
 ```
 
 ```output
-SRR2584863_1_fastqc/      SRR2584866_1_fastqc/      SRR2589044_1_fastqc/
-SRR2584863_1_fastqc.html  SRR2584866_1_fastqc.html  SRR2589044_1_fastqc.html
-SRR2584863_1_fastqc.zip   SRR2584866_1_fastqc.zip   SRR2589044_1_fastqc.zip
-SRR2584863_2_fastqc/      SRR2584866_2_fastqc/      SRR2589044_2_fastqc/
-SRR2584863_2_fastqc.html  SRR2584866_2_fastqc.html  SRR2589044_2_fastqc.html
-SRR2584863_2_fastqc.zip   SRR2584866_2_fastqc.zip   SRR2589044_2_fastqc.zip
+YMX005645_R1_fastqc/      YMX005645_R1_fastqc.zip  YMX005645_R2_fastqc.html
+YMX005645_R1_fastqc.html  YMX005645_R2_fastqc/     YMX005645_R2_fastqc.zip
 ```
 
 Let's see what files are present within one of these output directories.
 
 ```bash
-$ ls -F SRR2584863_1_fastqc/
+$ ls -F YMX005645_R1_fastqc/  
 ```
 
 ```output
@@ -700,21 +677,20 @@ fastqc_data.txt  fastqc.fo  fastqc_report.html	Icons/	Images/  summary.txt
 Use `less` to preview the `summary.txt` file for this sample.
 
 ```bash
-$ less SRR2584863_1_fastqc/summary.txt
+$ less YMX005645_R1_fastqc/summary.txt
 ```
 
 ```output
-PASS    Basic Statistics        SRR2584863_1.fastq
-PASS    Per base sequence quality       SRR2584863_1.fastq
-PASS    Per tile sequence quality       SRR2584863_1.fastq
-PASS    Per sequence quality scores     SRR2584863_1.fastq
-WARN    Per base sequence content       SRR2584863_1.fastq
-WARN    Per sequence GC content SRR2584863_1.fastq
-PASS    Per base N content      SRR2584863_1.fastq
-PASS    Sequence Length Distribution    SRR2584863_1.fastq
-PASS    Sequence Duplication Levels     SRR2584863_1.fastq
-PASS    Overrepresented sequences       SRR2584863_1.fastq
-WARN    Adapter Content SRR2584863_1.fastq
+PASS    Basic Statistics        YMX005645_R1.fastq
+PASS    Per base sequence quality       YMX005645_R1.fastq
+PASS    Per sequence quality scores     YMX005645_R1.fastq
+PASS    Per base sequence content       YMX005645_R1.fastq
+PASS    Per sequence GC content YMX005645_R1.fastq
+PASS    Per base N content      YMX005645_R1.fastq
+PASS    Sequence Length Distribution    YMX005645_R1.fastq
+PASS    Sequence Duplication Levels     YMX005645_R1.fastq
+PASS    Overrepresented sequences       YMX005645_R1.fastq
+PASS    Adapter Content YMX005645_R1.fastq
 ```
 
 The summary file gives us a list of tests that FastQC ran, and tells
@@ -729,6 +705,7 @@ using the `cat` command. We will call this `fastqc_summaries.txt` and move
 it to `~/dc_workshop/docs`.
 
 ```bash
+$ mkdir ~/dc_workshop_YEAST/docs
 $ cat */summary.txt > ~/dc_workshop_YEAST/docs/fastqc_summaries.txt
 ```
 
@@ -736,7 +713,7 @@ $ cat */summary.txt > ~/dc_workshop_YEAST/docs/fastqc_summaries.txt
 
 ### Exercise
 
-Which samples failed at least one of FastQC's quality tests? What
+Which samples failed "Per base sequence quality" tests? What
 test(s) did those samples fail?
 
 :::::::::::::::  solution
@@ -747,22 +724,12 @@ We can get the list of all failed tests using `grep`.
 
 ```bash
 $ cd ~/dc_workshop_YEAST/docs
-$ grep FAIL fastqc_summaries.txt
+$  grep "Per base sequence quality" fastqc_summaries.txt
 ```
 
 ```output
-FAIL    Per base sequence quality       SRR2584863_2.fastq.gz
-FAIL    Per tile sequence quality       SRR2584863_2.fastq.gz
-FAIL    Per base sequence content       SRR2584863_2.fastq.gz
-FAIL    Per base sequence quality       SRR2584866_1.fastq.gz
-FAIL    Per base sequence content       SRR2584866_1.fastq.gz
-FAIL    Adapter Content SRR2584866_1.fastq.gz
-FAIL    Adapter Content SRR2584866_2.fastq.gz
-FAIL    Adapter Content SRR2589044_1.fastq.gz
-FAIL    Per base sequence quality       SRR2589044_2.fastq.gz
-FAIL    Per tile sequence quality       SRR2589044_2.fastq.gz
-FAIL    Per base sequence content       SRR2589044_2.fastq.gz
-FAIL    Adapter Content SRR2589044_2.fastq.gz
+PASS    Per base sequence quality       YMX005645_R1.fastq
+PASS    Per base sequence quality       YMX005645_R2.fastq
 ```
 
 :::::::::::::::::::::::::
