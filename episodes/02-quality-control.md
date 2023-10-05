@@ -358,15 +358,16 @@ file sizes.)
 ### Solution
 
 ```bash
-$ ls -l -h
+$  ls -Llh
 ```
 
 ```output
-lrwxrwxrwx 1 root    root            65 Oct  4 22:17  YMX005645_R1.fastq -> /home/dc_workshop_YEAST/data_1/untrimmed_fastq/YMX005645_R1.fastq
-lrwxrwxrwx 1 root    root            65 Oct  4 22:18  YMX005645_R2.fastq -> /home/dc_workshop_YEAST/data_1/untrimmed_fastq/YMX005645_R2.fastq
+-rw-r--r-- 1 root    root          2.6G Oct  4 22:00  YMX005645_R1.fastq
+-rw-r--r-- 1 root    root          2.6G Oct  4 22:00  YMX005645_R2.fastq
+
 ```
 
-There are six FASTQ files ranging from 124M (124MB) to 545M.
+There are two FASTQ files of 2.6G.
 
 :::::::::::::::::::::::::
 
