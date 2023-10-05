@@ -17,7 +17,7 @@ exercises: 15
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-## What is a phylogenetic tree?
+## Run the phylogenetic tree
 
 You got vcf files with variants called for each one of the samples using a bash script in the previous lesson.
 
@@ -51,12 +51,6 @@ To visualize the tree, we can use [Microreact](https://microreact.org/)
   
 load the .tree output along with the metadata to visualize the results.
 
-
-
-:::::::::::::::::::::::::::::::::::::::::  callout
-
-
-::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
