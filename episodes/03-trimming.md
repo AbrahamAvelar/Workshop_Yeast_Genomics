@@ -123,7 +123,7 @@ to separate code chunks onto separate lines. This can make your code more readab
 Now we will run Trimmomatic on our data. To begin, navigate to your `untrimmed_fastq` data directory:
 
 ```bash
-$ cd ~/dc_workshop/data/untrimmed_fastq
+$ cd ~/dc_workshop_YEAST/data/untrimmed_fastq
 ```
 
 We are going to run Trimmomatic on one of our paired-end samples.
@@ -149,16 +149,9 @@ $ trimmomatic PE -threads 4 YMX005645_R1.fastq YMX005645_R2.fastq \
 
 ```output
 TrimmomaticPE: Started with arguments:
- SRR2589044_1.fastq.gz SRR2589044_2.fastq.gz SRR2589044_1.trim.fastq.gz SRR2589044_1un.trim.fastq.gz SRR2589044_2.trim.fastq.gz SRR2589044_2un.trim.fastq.gz SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
-Multiple cores found: Using 2 threads
-Using PrefixPair: 'AGATGTGTATAAGAGACAG' and 'AGATGTGTATAAGAGACAG'
-Using Long Clipping Sequence: 'GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG'
-Using Long Clipping Sequence: 'TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG'
-Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTCCGAGCCCACGAGAC'
-Using Long Clipping Sequence: 'CTGTCTCTTATACACATCTGACGCTGCCGACGA'
-ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
-Quality encoding detected as phred33
-Input Read Pairs: 1107090 Both Surviving: 885220 (79.96%) Forward Only Surviving: 216472 (19.55%) Reverse Only Surviving: 2850 (0.26%) Dropped: 2548 (0.23%)
+ -threads 4 YMX005645_R1.fastq YMX005645_R2.fastq YMX005645_R1.trimmed.fastq YMX005645_R1un.trimmed.fastq YMX005645_R2.trimmed.fastq YMX005645_R2un.trimmed.fastq SLIDINGWINDOW:4:20 MINLEN:100 LEADING:5 TRAILING:5
+Quality encoding detected as phred64
+Input Read Pairs: 8020412 Both Surviving: 7029362 (87.64%) Forward Only Surviving: 433562 (5.41%) Reverse Only Surviving: 369853 (4.61%) Dropped: 187635 (2.34%)
 TrimmomaticPE: Completed successfully
 ```
 
@@ -176,8 +169,8 @@ following questions.
 
 ## Solution
 
-1) 0\.23%
-2) 79\.96%
+1) 2\.34%
+2) 87\.64%
   
   
 
@@ -192,40 +185,40 @@ double-check this or to enter the quality encoding manually.
 We can confirm that we have our output files:
 
 ```bash
-$ ls SRR2589044*
+$ ls  YMX005645_R1*
 ```
 
 ```output
-SRR2589044_1.fastq.gz       SRR2589044_1un.trim.fastq.gz  SRR2589044_2.trim.fastq.gz
-SRR2589044_1.trim.fastq.gz  SRR2589044_2.fastq.gz         SRR2589044_2un.trim.fastq.gz
+ YMX005645_R1.fastq.gz        YMX005645_R1un.trim.fastq.gz   YMX005645_R2.trim.fastq.gz
+ YMX005645_R1.trim.fastq.gz   YMX005645_R2.fastq.gz          YMX005645_R2un.trim.fastq.gz
 ```
 
 The output files are also FASTQ files. It should be smaller than our
 input file, because we have removed reads. We can confirm this:
 
 ```bash
-$ ls SRR2589044* -l -h
+$ ls  YMX005645* -lL -h
 ```
 
 ```output
--rw-rw-r-- 1 dcuser dcuser 124M Jul  6 20:22 SRR2589044_1.fastq.gz
--rw-rw-r-- 1 dcuser dcuser  94M Jul  6 22:33 SRR2589044_1.trim.fastq.gz
--rw-rw-r-- 1 dcuser dcuser  18M Jul  6 22:33 SRR2589044_1un.trim.fastq.gz
--rw-rw-r-- 1 dcuser dcuser 128M Jul  6 20:24 SRR2589044_2.fastq.gz
--rw-rw-r-- 1 dcuser dcuser  91M Jul  6 22:33 SRR2589044_2.trim.fastq.gz
--rw-rw-r-- 1 dcuser dcuser 271K Jul  6 22:33 SRR2589044_2un.trim.fastq.gz
+-rw-r--r-- 1 root    root          2.6G Oct  4 22:00 YMX005645_R1.fastq
+-rw-r--r-- 1 user rstudio-users 2.2G Oct  5 00:08 YMX005645_R1.trimmed.fastq
+-rw-r--r-- 1 user rstudio-users 135M Oct  5 00:08 YMX005645_R1un.trimmed.fastq
+-rw-r--r-- 1 root    root          2.6G Oct  4 23:17 YMX005645_R2.fastq
+-rw-r--r-- 1 user rstudio-users 2.2G Oct  5 00:08 YMX005645_R2.trimmed.fastq
+-rw-r--r-- 1 user rstudio-users 113M Oct  5 00:08 YMX005645_R2un.trimmed.fastq
 ```
 
 We have just successfully run Trimmomatic on one of our FASTQ files!
 However, there is some bad news. Trimmomatic can only operate on
 one sample at a time and we have more than one sample. The good news
-is that we can use a `for` loop to iterate through our sample files
+is that If we have more samples we can use a `for` loop to iterate through our sample files
 quickly!
 
 We unzipped one of our files before to work with it, let's compress it again before we run our for loop.
 
 ```bash
-gzip SRR2584863_1.fastq 
+gzip YMX005645_R1.fastq 
 ```
 
 ```bash
@@ -235,10 +228,10 @@ $ for infile in *_1.fastq.gz
 >   trimmomatic PE ${infile} ${base}_2.fastq.gz \
 >                ${base}_1.trim.fastq.gz ${base}_1un.trim.fastq.gz \
 >                ${base}_2.trim.fastq.gz ${base}_2un.trim.fastq.gz \
->                SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15 
+>                SLIDINGWINDOW:4:20 MINLEN:100 LEADING:5 TRAILING:5 
 > done
 ```
-
+For example if you have another sample SRR2589044 _1.fastq.gz.
 Go ahead and run the for loop. It should take a few minutes for
 Trimmomatic to run for each of our six input files. Once it is done
 running, take a look at your directory contents. You will notice that even though we ran Trimmomatic on file `SRR2589044` before running the for loop, there is only one set of files for it. Because we matched the ending `_1.fastq.gz`, we re-ran Trimmomatic on this file, overwriting our first results. That is ok, but it is good to be aware that it happened.
@@ -248,46 +241,19 @@ $ ls
 ```
 
 ```output
-NexteraPE-PE.fa               SRR2584866_1.fastq.gz         SRR2589044_1.trim.fastq.gz
-SRR2584863_1.fastq.gz         SRR2584866_1.trim.fastq.gz    SRR2589044_1un.trim.fastq.gz
-SRR2584863_1.trim.fastq.gz    SRR2584866_1un.trim.fastq.gz  SRR2589044_2.fastq.gz
-SRR2584863_1un.trim.fastq.gz  SRR2584866_2.fastq.gz         SRR2589044_2.trim.fastq.gz
-SRR2584863_2.fastq.gz         SRR2584866_2.trim.fastq.gz    SRR2589044_2un.trim.fastq.gz
-SRR2584863_2.trim.fastq.gz    SRR2584866_2un.trim.fastq.gz
-SRR2584863_2un.trim.fastq.gz  SRR2589044_1.fastq.gz
+YMX005645_R1.fastq          YMX005645_R1un.trimmed.fastq  YMX005645_R2.trimmed.fastq
+YMX005645_R1.trimmed.fastq  YMX005645_R2.fastq            YMX005645_R2un.trimmed.fastq
 ```
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
-## Exercise
-
-We trimmed our fastq files with Nextera adapters,
-but there are other adapters that are commonly used.
-What other adapter files came with Trimmomatic?
-
-:::::::::::::::  solution
-
-## Solution
-
-```bash
-$ ls ~/miniconda3/pkgs/trimmomatic-0.38-0/share/trimmomatic-0.38-0/adapters/
-```
-
-```output
-NexteraPE-PE.fa  TruSeq2-SE.fa    TruSeq3-PE.fa
-TruSeq2-PE.fa    TruSeq3-PE-2.fa  TruSeq3-SE.fa
-```
-
-:::::::::::::::::::::::::
-
-::::::::::::::::::::::::::::::::::::::::::::::::::
 
 We have now completed the trimming and filtering steps of our quality
 control process! Before we move on, let's move our trimmed FASTQ files
 to a new subdirectory within our `data/` directory.
 
 ```bash
-$ cd ~/dc_workshop/data/untrimmed_fastq
+$ cd ~/dc_workshop_YEAST/data/untrimmed_fastq
 $ mkdir ../trimmed_fastq
 $ mv *.trim* ../trimmed_fastq
 $ cd ../trimmed_fastq
@@ -295,10 +261,7 @@ $ ls
 ```
 
 ```output
-SRR2584863_1.trim.fastq.gz    SRR2584866_1.trim.fastq.gz    SRR2589044_1.trim.fastq.gz
-SRR2584863_1un.trim.fastq.gz  SRR2584866_1un.trim.fastq.gz  SRR2589044_1un.trim.fastq.gz
-SRR2584863_2.trim.fastq.gz    SRR2584866_2.trim.fastq.gz    SRR2589044_2.trim.fastq.gz
-SRR2584863_2un.trim.fastq.gz  SRR2584866_2un.trim.fastq.gz  SRR2589044_2un.trim.fastq.gz
+YMX005645_R1.trimmed.fastq  YMX005645_R1un.trimmed.fastq  YMX005645_R2.trimmed.fastq  YMX005645_R2un.trimmed.fastq
 ```
 
 :::::::::::::::::::::::::::::::::::::::  challenge
@@ -318,14 +281,14 @@ trimming.
 In your AWS terminal window do:
 
 ```bash
-$ fastqc ~/dc_workshop/data/trimmed_fastq/*.fastq*
+$ fastqc ~/dc_workshop_YEAST/data/trimmed_fastq/*.fastq*
 ```
 
 In a new tab in your terminal do:
 
 ```bash
 $ mkdir ~/Desktop/fastqc_html/trimmed
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/data/trimmed_fastq/*.html ~/Desktop/fastqc_html/trimmed
+$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop_YEAST/data/trimmed_fastq/*.html ~/Desktop/fastqc_html/trimmed
 ```
 
 Then take a look at the html files in your browser.
