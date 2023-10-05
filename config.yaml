@@ -27,7 +27,7 @@ life_cycle: 'stable'
 license: 'CC-BY 4.0'
 
 # Link to the source repository for this lesson
-source: 'https://github.com/datacarpentry/wrangling-genomics'
+source: 'https://github.com/AbrahamAvelar/wrangling-genomics'
 
 # Default branch of your lesson
 branch: 'main'
@@ -80,6 +80,6 @@ profiles:
 # sandpaper and varnish versions) should live
 
 
-url: 'https://datacarpentry.github.io/wrangling-genomics'
+url: 'https://AbrahamAvelar.github.io/wrangling-genomics'
 analytics: carpentries
 lang: en
