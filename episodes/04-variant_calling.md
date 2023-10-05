@@ -39,18 +39,18 @@ The alignment process consists of two steps:
 First we download the reference genome for *E. coli* REL606. Although we could copy or move the file with `cp` or `mv`, most genomics workflows begin with a download step, so we will practice that here.
 
 ```bash
-$ cd ~/dc_workshop
+$ cd ~/dc_workshop_YEAST
 $ mkdir -p data/ref_genome
-$ curl -L -o data/ref_genome/ecoli_rel606.fasta.gz ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/017/985/GCA_000017985.1_ASM1798v1/GCA_000017985.1_ASM1798v1_genomic.fna.gz
-$ gunzip data/ref_genome/ecoli_rel606.fasta.gz
+$ cd data/ref_genome
+$ ln -s /home/dc_workshop_YEAST/data/ref_genome/SACE_S288C_v1_allChr.fasta .
 ```
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
 ### Exercise
 
-We saved this file as `data/ref_genome/ecoli_rel606.fasta.gz` and then decompressed it.
-What is the real name of the genome?
+We saved this file as `data/ref_genome/SACE_S288C_v1_allChr.fasta`.
+How many chromosomes does have this genome?
 
 :::::::::::::::  solution
 
@@ -59,10 +59,26 @@ What is the real name of the genome?
 ```bash
 $ head data/ref_genome/ecoli_rel606.fasta
 ```
-
-The name of the sequence follows the `>` character. The name is `CP000819.1 Escherichia coli B str. REL606, complete genome`.
-Keep this chromosome name (`CP000819.1`) in mind, as we will use it later in the lesson.
-
+```bash
+>SACE_S288C_v1_chr_01
+>SACE_S288C_v1_chr_02
+>SACE_S288C_v1_chr_03
+>SACE_S288C_v1_chr_04
+>SACE_S288C_v1_chr_05
+>SACE_S288C_v1_chr_06
+>SACE_S288C_v1_chr_07
+>SACE_S288C_v1_chr_08
+>SACE_S288C_v1_chr_09
+>SACE_S288C_v1_chr_10
+>SACE_S288C_v1_chr_11
+>SACE_S288C_v1_chr_12
+>SACE_S288C_v1_chr_13
+>SACE_S288C_v1_chr_14
+>SACE_S288C_v1_chr_15
+>SACE_S288C_v1_chr_16
+>SACE_S288C_v1_chr_mt
+>SACE_S288C_v1_chr_2m
+```
 
 
 :::::::::::::::::::::::::
@@ -73,9 +89,10 @@ We will also download a set of trimmed FASTQ files to work with. These are small
 and will enable us to run our variant calling workflow quite quickly.
 
 ```bash
-$ curl -L -o sub.tar.gz https://ndownloader.figshare.com/files/14418248
-$ tar xvf sub.tar.gz
-$ mv sub/ ~/dc_workshop/data/trimmed_fastq_small
+ 
+seqtk sample -s100 ~/dc_workshop/data/untrimmed_fastq/read1.fq 0.1 > sub1.fq
+seqtk sample -s100 ~/dc_workshop/data/untrimmed_fastq/read2.fq 0.1 > sub2.fq
+$ mv sub/ ~/dc_workshop_YEAST/data/trimmed_fastq_small
 ```
 
 You will also need to create directories for the results that will be generated as part of this workflow. We can do this in a single
@@ -481,7 +498,7 @@ position 4377265? What is the canonical nucleotide in that position?
 ### Solution
 
 ```bash
-$ samtools tview ~/dc_workshop/results/bam/SRR2584866.aligned.sorted.bam ~/dc_workshop/data/ref_genome/ecoli_rel606.fasta
+$ samtools tview ~/dc_workshop_YEAST/results/bam/SRR2584866.aligned.sorted.bam ~/dc_workshop_YEAST/data/ref_genome/ecoli_rel606.fasta
 ```
 
 Then type `g`. In the dialogue box, type `CP000819.1:4377265`.
@@ -513,10 +530,10 @@ with your AWS instance number. The commands to `scp` always go in the terminal w
 local computer (not your AWS instance).
 
 ```bash
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/results/bam/SRR2584866.aligned.sorted.bam ~/Desktop/files_for_igv
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/results/bam/SRR2584866.aligned.sorted.bam.bai ~/Desktop/files_for_igv
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/data/ref_genome/ecoli_rel606.fasta ~/Desktop/files_for_igv
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop/results/vcf/SRR2584866_final_variants.vcf ~/Desktop/files_for_igv
+$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop_YEAST/results/bam/SRR2584866.aligned.sorted.bam ~/Desktop/files_for_igv
+$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop_YEAST/results/bam/SRR2584866.aligned.sorted.bam.bai ~/Desktop/files_for_igv
+$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop_YEAST/data/ref_genome/ecoli_rel606.fasta ~/Desktop/files_for_igv
+$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop_YEAST/results/vcf/SRR2584866_final_variants.vcf ~/Desktop/files_for_igv
 ```
 
 You will need to type the password for your AWS instance each time you call `scp`.
