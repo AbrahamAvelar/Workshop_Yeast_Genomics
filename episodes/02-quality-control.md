@@ -56,33 +56,25 @@ Here we are using the `-p` option for `mkdir`. This option allows `mkdir` to cre
 It will take about 15 minutes to download the files.
 
 ```bash
-mkdir -p ~/dc_workshop/data/untrimmed_fastq/
 cd ~/dc_workshop/data/untrimmed_fastq
-
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/004/SRR2589044/SRR2589044_1.fastq.gz
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/004/SRR2589044/SRR2589044_2.fastq.gz
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/003/SRR2584863/SRR2584863_1.fastq.gz
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/003/SRR2584863/SRR2584863_2.fastq.gz
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/006/SRR2584866/SRR2584866_1.fastq.gz
-curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR258/006/SRR2584866/SRR2584866_2.fastq.gz
 ```
 
 :::::::::::::::::::::::::::::::::::::::::  callout
 
-### Faster option
-
-If your workshop is short on time or the venue's internet connection is weak or unstable, learners can
-avoid needing to download the data and instead use the data files provided in the `.backup/` directory.
-
 ```bash
-$ cp ~/.backup/untrimmed_fastq/*fastq.gz .
+ls
+:::::::::::::::::::::::::::::::::::::::::  callout
+
+```output
+dc_workshop_YEAST/data/raw/YMX005645_R1.fastq.gz 
+#  AHORITA se llama: /home/alumno1/dc_workshop_YEAST/data_1/untrimmed_fastq
+dc_workshop_YEAST/data/raw/YMX005645_R2.fastq.gz # ESTOY INTENTANDO QUE NO SEAN LOS ARCHIVOS COMPLETOS PORQUE ESTÁN PESADOS y que sean al menos 5 muestras 
+  
+dc_workshop_YEAST/data/ref_genome/SACE_S288C_v1_allChr.fasta
+
+dc_workshop_YEAST/multvcf/MATRIX_24SACE.vcf
+dc_workshop_YEAST/multvcf/vcf2phylip.py
 ```
-
-This command creates a copy of each of the files in the `.backup/untrimmed_fastq/` directory that end in `fastq.gz` and
-places the copies in the current working directory (signified by `.`).
-
-
-::::::::::::::::::::::::::::::::::::::::::::::::::
 
 The data comes in a compressed format, which is why there is a `.gz` at the end of the file names. This makes it faster to transfer, and allows it to take up less space on our computer. Let's unzip one of the files so that we can look at the fastq format.
 
