@@ -86,6 +86,11 @@ and options, see [the Trimmomatic manual](https://www.usadellab.org/cms/uploads/
 However, a complete command for Trimmomatic will look something like the command below. This command is an example and will not work, as we do not have the files it refers to:
 
 ```bash
+$ trimmomatic PE -threads 4 YMX005645_R1.fastq YMX005645_R2.fastq \
+ YMX005645_R1.trimmed.fastq YMX005645_R1un.trimmed.fastq \
+ YMX005645_R2.trimmed.fastq YMX005645_R2un.trimmed.fastq \
+ SLIDINGWINDOW:4:20 MINLEN:100 LEADING:5 TRAILING:5
+
 $ trimmomatic PE -threads 4 SRR_1056_1.fastq SRR_1056_2.fastq  \
               SRR_1056_1.trimmed.fastq SRR_1056_1un.trimmed.fastq \
               SRR_1056_2.trimmed.fastq SRR_1056_2un.trimmed.fastq \
