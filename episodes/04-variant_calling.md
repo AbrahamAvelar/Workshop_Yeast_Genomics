@@ -233,19 +233,22 @@ samtools flagstat results/bam/output.sorted.bam
 This will give you the following statistics about your sorted bam file:
 
 ```output
-351169 + 0 in total (QC-passed reads + QC-failed reads)
+100001 + 0 in total (QC-passed reads + QC-failed reads)
+99545 + 0 primary
 0 + 0 secondary
-1169 + 0 supplementary
+456 + 0 supplementary
 0 + 0 duplicates
-351103 + 0 mapped (99.98% : N/A)
-350000 + 0 paired in sequencing
-175000 + 0 read1
-175000 + 0 read2
-346688 + 0 properly paired (99.05% : N/A)
-349876 + 0 with itself and mate mapped
-58 + 0 singletons (0.02% : N/A)
-0 + 0 with mate mapped to a different chr
-0 + 0 with mate mapped to a different chr (mapQ>=5)
+0 + 0 primary duplicates
+98872 + 0 mapped (98.87% : N/A)
+98416 + 0 primary mapped (98.87% : N/A)
+99545 + 0 paired in sequencing
+49783 + 0 read1
+49762 + 0 read2
+97163 + 0 properly paired (97.61% : N/A)
+98300 + 0 with itself and mate mapped
+116 + 0 singletons (0.12% : N/A)
+793 + 0 with mate mapped to a different chr
+544 + 0 with mate mapped to a different chr (mapQ>=5)
 ```
 
 ### Variant calling
@@ -266,11 +269,12 @@ use the command `mpileup`. The flag `-O b` tells bcftools to generate a
 bcf format output file, `-o` specifies where to write the output file, and `-f` flags the path to the reference genome:
 
 ```bash
-$ bcftools mpileup -O b -o results/bcf/output_raw.bcf -f _genome/SACE_S288C_v1_allChr.fasta results/bam/output.sorted.bam # 
+$ bcftools mpileup -O b -o results/bcf/output_raw.bcf -f data/ref_genome/SACE_S288C_v1_allChr.fasta results/bam/output.sorted.bam 
 ```
 
 ```output
 [mpileup] 1 samples in 1 input files
+[mpileup] maximum number of reads per input file set to -d 250
 ```
 
 We have now generated a file with coverage information for every base.
@@ -302,11 +306,11 @@ calculating the ratio of [transitions(TS)](https://en.wikipedia.org/wiki/Transit
 where transitions should be more likely to occur than transversions:
 
 ```bash
-$ bcftools stats results/bcf/SRR2584866_variants.vcf | grep TSTV
+$ bcftools stats results/bcf/output_variants.vcf | grep TSTV
 # TSTV, transitions/transversions:
 # TSTV	[2]id	[3]ts	[4]tv	[5]ts/tv	[6]ts (1st ALT)	[7]tv (1st ALT)	[8]ts/tv (1st ALT)
 TSTV	0	628	58	10.83	628	58	10.83
-$ bcftools stats results/vcf/SRR2584866_final_variants.vcf | grep TSTV
+$ bcftools stats results/vcf/output_final_variants.vcf | grep TSTV
 # TSTV, transitions/transversions:
 # TSTV	[2]id	[3]ts	[4]tv	[5]ts/tv	[6]ts (1st ALT)	[7]tv (1st ALT)	[8]ts/tv (1st ALT)
 TSTV	0	621	54	11.50	621	54	11.50
@@ -317,60 +321,56 @@ TSTV	0	621	54	11.50	621	54	11.50
 ### Explore the VCF format:
 
 ```bash
-$ less -S results/vcf/SRR2584866_final_variants.vcf
+$ less -S results/vcf/output_final_variants.vcf
 ```
 
 You will see the header (which describes the format), the time and date the file was
 created, the version of bcftools that was used, the command line parameters used, and
 some additional information:
 
-```output
-##fileformat=VCFv4.2
+```output##fileformat=VCFv4.2
 ##FILTER=<ID=PASS,Description="All filters passed">
-##bcftoolsVersion=1.8+htslib-1.8
-##bcftoolsCommand=mpileup -O b -o results/bcf/SRR2584866_raw.bcf -f data/ref_genome/SACE_S288C_v1_allChr.fasta results/bam/SRR2584866.aligned.sorted.bam
+##bcftoolsVersion=1.13+htslib-1.13+ds
+##bcftoolsCommand=mpileup -O b -o results/bcf/output_raw.bcf -f data/ref_genome/SACE_S288C_v1_allChr.>
 ##reference=file://data/ref_genome/SACE_S288C_v1_allChr.fasta
-##contig=<ID=CP000819.1,length=4629812>
+##contig=<ID=SACE_S288C_v1_chr_01,length=230218>
+##contig=<ID=SACE_S288C_v1_chr_02,length=813184>
+##contig=<ID=SACE_S288C_v1_chr_03,length=316620>
+##contig=<ID=SACE_S288C_v1_chr_04,length=1531933>
+##contig=<ID=SACE_S288C_v1_chr_05,length=576874>
+##contig=<ID=SACE_S288C_v1_chr_06,length=270161>
+##contig=<ID=SACE_S288C_v1_chr_07,length=1090940>
+##contig=<ID=SACE_S288C_v1_chr_08,length=562643>
+##contig=<ID=SACE_S288C_v1_chr_09,length=439888>
+##contig=<ID=SACE_S288C_v1_chr_10,length=745751>
+##contig=<ID=SACE_S288C_v1_chr_11,length=666816>
+##contig=<ID=SACE_S288C_v1_chr_12,length=1078177>
+##contig=<ID=SACE_S288C_v1_chr_13,length=924431>
+##contig=<ID=SACE_S288C_v1_chr_14,length=784333>
+##contig=<ID=SACE_S288C_v1_chr_15,length=1091291>
+##contig=<ID=SACE_S288C_v1_chr_16,length=948066>
+##contig=<ID=SACE_S288C_v1_chr_mt,length=85779>
+##contig=<ID=SACE_S288C_v1_chr_2m,length=6318>
 ##ALT=<ID=*,Description="Represents allele(s) other than observed.">
 ##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
-##INFO=<ID=IDV,Number=1,Type=Integer,Description="Maximum number of reads supporting an indel">
-##INFO=<ID=IMF,Number=1,Type=Float,Description="Maximum fraction of reads supporting an indel">
-##INFO=<ID=DP,Number=1,Type=Integer,Description="Raw read depth">
-##INFO=<ID=VDB,Number=1,Type=Float,Description="Variant Distance Bias for filtering splice-site artefacts in RNA-seq data (bigger is better)",Version=
-##INFO=<ID=RPB,Number=1,Type=Float,Description="Mann-Whitney U test of Read Position Bias (bigger is better)">
-##INFO=<ID=MQB,Number=1,Type=Float,Description="Mann-Whitney U test of Mapping Quality Bias (bigger is better)">
-##INFO=<ID=BQB,Number=1,Type=Float,Description="Mann-Whitney U test of Base Quality Bias (bigger is better)">
-##INFO=<ID=MQSB,Number=1,Type=Float,Description="Mann-Whitney U test of Mapping Quality vs Strand Bias (bigger is better)">
-##INFO=<ID=SGB,Number=1,Type=Float,Description="Segregation based metric.">
-##INFO=<ID=MQ0F,Number=1,Type=Float,Description="Fraction of MQ0 reads (smaller is better)">
-##FORMAT=<ID=PL,Number=G,Type=Integer,Description="List of Phred-scaled genotype likelihoods">
-##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-##INFO=<ID=ICB,Number=1,Type=Float,Description="Inbreeding Coefficient Binomial test (bigger is better)">
-##INFO=<ID=HOB,Number=1,Type=Float,Description="Bias in the number of HOMs number (smaller is better)">
-##INFO=<ID=AC,Number=A,Type=Integer,Description="Allele count in genotypes for each ALT allele, in the same order as listed">
-##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
-##INFO=<ID=DP4,Number=4,Type=Integer,Description="Number of high-quality ref-forward , ref-reverse, alt-forward and alt-reverse bases">
-##INFO=<ID=MQ,Number=1,Type=Integer,Description="Average mapping quality">
-##bcftools_callVersion=1.8+htslib-1.8
-##bcftools_callCommand=call --ploidy 1 -m -v -o results/bcf/SRR2584866_variants.vcf results/bcf/SRR2584866_raw.bcf; Date=Tue Oct  9 18:48:10 2018
+##INFO=<ID=IDV,Number=1,Type=Integer,Description="Maximum number of raw reads supporting an indel">
 ```
 
 Followed by information on each of the variations observed:
 
 ```output
-#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  results/bam/SRR2584866.aligned.sorted.bam
-CP000819.1      1521    .       C       T       207     .       DP=9;VDB=0.993024;SGB=-0.662043;MQSB=0.974597;MQ0F=0;AC=1;AN=1;DP4=0,0,4,5;MQ=60
-CP000819.1      1612    .       A       G       225     .       DP=13;VDB=0.52194;SGB=-0.676189;MQSB=0.950952;MQ0F=0;AC=1;AN=1;DP4=0,0,6,5;MQ=60
-CP000819.1      9092    .       A       G       225     .       DP=14;VDB=0.717543;SGB=-0.670168;MQSB=0.916482;MQ0F=0;AC=1;AN=1;DP4=0,0,7,3;MQ=60
-CP000819.1      9972    .       T       G       214     .       DP=10;VDB=0.022095;SGB=-0.670168;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,2,8;MQ=60      GT:PL
-CP000819.1      10563   .       G       A       225     .       DP=11;VDB=0.958658;SGB=-0.670168;MQSB=0.952347;MQ0F=0;AC=1;AN=1;DP4=0,0,5,5;MQ=60
-CP000819.1      22257   .       C       T       127     .       DP=5;VDB=0.0765947;SGB=-0.590765;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,2,3;MQ=60      GT:PL
-CP000819.1      38971   .       A       G       225     .       DP=14;VDB=0.872139;SGB=-0.680642;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,4,8;MQ=60      GT:PL
-CP000819.1      42306   .       A       G       225     .       DP=15;VDB=0.969686;SGB=-0.686358;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,5,9;MQ=60      GT:PL
-CP000819.1      45277   .       A       G       225     .       DP=15;VDB=0.470998;SGB=-0.680642;MQSB=0.95494;MQ0F=0;AC=1;AN=1;DP4=0,0,7,5;MQ=60
-CP000819.1      56613   .       C       G       183     .       DP=12;VDB=0.879703;SGB=-0.676189;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,8,3;MQ=60      GT:PL
-CP000819.1      62118   .       A       G       225     .       DP=19;VDB=0.414981;SGB=-0.691153;MQSB=0.906029;MQ0F=0;AC=1;AN=1;DP4=0,0,8,10;MQ=59
-CP000819.1      64042   .       G       A       225     .       DP=18;VDB=0.451328;SGB=-0.689466;MQSB=1;MQ0F=0;AC=1;AN=1;DP4=0,0,7,9;MQ=60      GT:PL
+##bcftools_callVersion=1.13+htslib-1.13+ds
+##bcftools_callCommand=call --ploidy 2 -m -v -o results/vcf/output_variants.vcf results/bcf/output_raw.bcf; Date=Thu Oct  5 02:16:48 2023
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  results/bam/output.sorted.bam
+SACE_S288C_v1_chr_01    537     .       T       C       14.5687 .       DP=2;VDB=0.96;SGB=-0.453602;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,2,0;MQ=23     GT:PL   1/1:44,6,0
+SACE_S288C_v1_chr_01    1352    .       A       G       24.9996 .       DP=4;VDB=0.36;SGB=-0.453602;RPBZ=-0.774597;MQBZ=0.408248;MQSBZ=-0.942809;BQBZ=1.54919;SCBZ=1;FS=0;MQ0F=0.25;AC=1;>
+SACE_S288C_v1_chr_01    1658    .       C       T       22.4391 .       DP=2;VDB=0.84;SGB=-0.453602;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,2,0;MQ=30     GT:PL   1/1:52,6,0
+SACE_S288C_v1_chr_01    1774    .       A       G       30.4038 .       DP=5;VDB=0.52;SGB=-0.453602;RPBZ=0;MQBZ=1.77705;MQSBZ=0.296174;BQBZ=1.82574;FS=0;MQ0F=0;AC=1;AN=2;DP4=1,2,1,1;MQ=>
+SACE_S288C_v1_chr_01    2706    .       A       G       38.415  .       DP=2;VDB=0.02;SGB=-0.453602;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60     GT:PL   1/1:68,6,0
+SACE_S288C_v1_chr_01    2748    .       A       T       35.4156 .       DP=2;VDB=0.06;SGB=-0.453602;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60     GT:PL   1/1:65,6,0
+SACE_S288C_v1_chr_01    2790    .       C       A       32.4168 .       DP=2;VDB=0.06;SGB=-0.453602;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60     GT:PL   1/1:62,6,0
+SACE_S288C_v1_chr_01    2796    .       G       A       34.4159 .       DP=2;VDB=0.06;SGB=-0.453602;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60     GT:PL   1/1:64,6,0
+SACE_S288C_v1_chr_01    2797    .       A       G       38.415  .       DP=2;VDB=0.06;SGB=-0.453602;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,2;MQ=60     GT:PL   1/1:68,6,0
 ```
 
 This is a lot of information, so let's take some time to make sure we understand our output.
@@ -420,14 +420,14 @@ Use the `grep` and `wc` commands you have learned to assess how many variants ar
 ### Solution
 
 ```bash
-$ grep -v "#" results/vcf/SRR2584866_final_variants.vcf | wc -l
+$ grep -v "#" results/vcf/output_final_variants.vcf | wc -l
 ```
 
 ```output
-766
+20336
 ```
 
-There are 766 variants in this file.
+There are 20336 variants in this file.
 
 
 
@@ -459,7 +459,7 @@ It uses different colors to display mapping quality or base quality, subjected t
 In order to visualize our mapped reads, we use `tview`, giving it the sorted bam file and the reference file:
 
 ```bash
-$ samtools tview results/bam/output.sorted.bam _genome/SACE_S288C_v1_allChr.fasta
+$ samtools tview -p 1:10000 results/bam/output.sorted.bam data/ref_genome/SACE_S288C_v1_allChr.fasta
 ```
 
 ```output
