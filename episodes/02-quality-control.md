@@ -45,7 +45,7 @@ built under the assumption that the data will be provided in a specific format.
 
 Often times, the first step in a bioinformatic workflow is getting the data you want to work with onto a computer where you can work with it. If you have outsourced sequencing of your data, the sequencing center will usually provide you with a link that you can use to download your data. Today we will be working with publicly available sequencing data.
 
-We are studying a population of *Escherichia coli* (designated Ara-3), which were propagated for more than 50,000 generations in a glucose-limited minimal medium. We will be working with three samples from this experiment, one from 5,000 generations, one from 15,000 generations, and one from 50,000 generations. The population changed substantially during the course of the experiment, and we will be exploring how with our variant calling workflow.
+We are studying a population of *Sacharomyces cereviseae*, from mezcal. We will be working with three samples from this experiment. The population changed substantially during the course of the experiment, and we will be exploring how with our variant calling workflow.
 
 The data are paired-end, so we will download two files for each sample. We will use the [European Nucleotide Archive](https://www.ebi.ac.uk/ena) to get our data. The ENA "provides a comprehensive record of the world's nucleotide sequencing information, covering raw sequencing data, sequence assembly information and functional annotation." The ENA also provides sequencing data in the fastq format, an important format for sequencing reads that we will be learning about today.
 
@@ -66,20 +66,8 @@ ls
 :::::::::::::::::::::::::::::::::::::::::  callout
 
 ```output
-dc_workshop_YEAST/data/raw/YMX005645_R1.fastq.gz 
-#  AHORITA se llama: /home/alumno1/dc_workshop_YEAST/data_1/untrimmed_fastq
-dc_workshop_YEAST/data/raw/YMX005645_R2.fastq.gz # ESTOY INTENTANDO QUE NO SEAN LOS ARCHIVOS COMPLETOS PORQUE ESTÁN PESADOS y que sean al menos 5 muestras 
-  
-dc_workshop_YEAST/data/ref_genome/SACE_S288C_v1_allChr.fasta
-
-dc_workshop_YEAST/multvcf/MATRIX_24SACE.vcf
-dc_workshop_YEAST/multvcf/vcf2phylip.py
-```
-
-The data comes in a compressed format, which is why there is a `.gz` at the end of the file names. This makes it faster to transfer, and allows it to take up less space on our computer. Let's unzip one of the files so that we can look at the fastq format.
-
-```bash
-$ gunzip SRR2584863_1.fastq.gz
+YMX005645_R1.fastq
+YMX005645_R2.fastq
 ```
 
 ## Quality control
@@ -105,14 +93,14 @@ We can view the first complete read in one of the files our dataset by using `he
 the first four lines.
 
 ```bash
-$ head -n 4 SRR2584863_1.fastq
+$ head -n 4 YMX005645_R1.fastq
 ```
 
 ```output
-@SRR2584863.1 HWI-ST957:244:H73TDADXX:1:1101:4712:2181/1
-TTCACATCCTGACCATTCAGTTGAGCAAAATAGTTCTTCAGTGCCTGTTTAACCGAGTCACGCAGGGGTTTTTGGGTTACCTGATCCTGAGAGTTAACGGTAGAAACGGTCAGTACGTCAGAATTTACGCGTTGTTCGAACATAGTTCTG
+@V350048516L3C001R00300000461/1
+ACTACTAAGTATACTGACTTGAATATGGCTTTCACAGCAAAGGCAAGCAATCTATCCCAAAATCGTTATTTATCAAATCCAAAACTAGCCCCTCCAAATAAAAATTGCCCAGTTTGCTCTAAAGTTTGTAGAGGTGTGATTAAGTTATCC
 +
-CCCFFFFFGHHHHJIJJJJIJJJIIJJJJIIIJJGFIIIJEDDFEGGJIFHHJIJJDECCGGEGIIJFHFFFACD:BBBDDACCCCAA@@CA@C>C3>@5(8&>C:9?8+89<4(:83825C(:A#########################
+cgceebechbcbegbhceccgddbcbhgeaccecgegdeccggeddeedd]ecdbfceedc\bfd`bccbbdbgeccbfeecbcgcceeeeebfhdde`ccdccbcgeefdgb\cgebgbde`g``cgbbebgdbg`Keabd`f`cacgf
 ```
 
 Line 4 shows the quality for each nucleotide in the read. Quality is interpreted as the
@@ -123,7 +111,7 @@ represents the numerical quality score for an individual nucleotide. For example
 above, the quality score line is:
 
 ```output
-CCCFFFFFGHHHHJIJJJJIJJJIIJJJJIIIJJGFIIIJEDDFEGGJIFHHJIJJDECCGGEGIIJFHFFFACD:BBBDDACCCCAA@@CA@C>C3>@5(8&>C:9?8+89<4(:83825C(:A#########################
+cgceebechbcbegbhceccgddbcbhgeaccecgegdeccggeddeedd]ecdbfceedc\bfd`bccbbdbgeccbfeecbcgcceeeeebfhdde`ccdccbcgeefdgb\cgebgbde`g``cgbbebgdbg`Keabd`f`cacgf
 ```
 
 The numerical value assigned to each of these characters depends on the
@@ -147,10 +135,10 @@ much signal was captured for the base incorporation.
 Looking back at our read:
 
 ```output
-@SRR2584863.1 HWI-ST957:244:H73TDADXX:1:1101:4712:2181/1
-TTCACATCCTGACCATTCAGTTGAGCAAAATAGTTCTTCAGTGCCTGTTTAACCGAGTCACGCAGGGGTTTTTGGGTTACCTGATCCTGAGAGTTAACGGTAGAAACGGTCAGTACGTCAGAATTTACGCGTTGTTCGAACATAGTTCTG
+@V350048516L3C001R00300000461/1
+ACTACTAAGTATACTGACTTGAATATGGCTTTCACAGCAAAGGCAAGCAATCTATCCCAAAATCGTTATTTATCAAATCCAAAACTAGCCCCTCCAAATAAAAATTGCCCAGTTTGCTCTAAAGTTTGTAGAGGTGTGATTAAGTTATCC
 +
-CCCFFFFFGHHHHJIJJJJIJJJIIJJJJIIIJJGFIIIJEDDFEGGJIFHHJIJJDECCGGEGIIJFHFFFACD:BBBDDACCCCAA@@CA@C>C3>@5(8&>C:9?8+89<4(:83825C(:A#########################
+cgceebechbcbegbhceccgddbcbhgeaccecgegdeccggeddeedd]ecdbfceedc\bfd`bccbbdbgeccbfeecbcgcceeeeebfhdde`ccdccbcgeefdgb\cgebgbde`g``cgbbebgdbg`Keabd`f`cacgf
 ```
 
 we can now see that there is a range of quality scores, but that the end of the sequence is
@@ -160,7 +148,7 @@ very poor (`#` = a quality score of 2).
 
 ### Exercise
 
-What is the last read in the `SRR2584863_1.fastq ` file? How confident
+What is the last read in the `YMX005645_R1.fastq` file? How confident
 are you in this read?
 
 :::::::::::::::  solution
@@ -168,14 +156,14 @@ are you in this read?
 ### Solution
 
 ```bash
-$ tail -n 4 SRR2584863_1.fastq
+$ tail -n 4 YMX005645_R1.fastq
 ```
 
 ```output
-@SRR2584863.1553259 HWI-ST957:245:H73R4ADXX:2:2216:21048:100894/1
-CTGCAATACCACGCTGATCTTTCACATGATGTAAGAAAAGTGGGATCAGCAAACCGGGTGCTGCTGTGGCTAGTTGCAGCAAACCATGCAGTGAACCCGCCTGTGCTTCGCTATAGCCGTGACTGATGAGGATCGCCGGAAGCCAGCCAA
+@V350048516L3C003R07001025136/1
+AAAATACTTTCATTAACCATTACGTTTCATGAGAACTTATCGGAAGGAATTGAAATCCTAGTAATAACAAAGAGCAAATAGCACCACTACCCTTAATCTCCCTCTTCTTCCATATATTTATACATTGCACTCATTCGCGAAATTTGGCAC
 +
-CCCFFFFFHHHHGJJJJJJJJJHGIJJJIJJJJIJJJJIIIIJJJJJJJJJJJJJIIJJJHHHHHFFFFFEEEEEDDDDDDDDDDDDDDDDDCDEDDBDBDDBDDDDDDDDDBDEEDDDD7@BDDDDDD>AA>?B?<@BDD@BDC?BDA?
+ddcdbcdb_bfccce`bddbcdZccccccagag]cec`d`dffccd`dd`bg_b\bgfbdfcebbddeedde`gfbcdadfTeccafbdcffcc]d^g`dff`bbadbb`ceadcabbaXcdcaba^bbcbadbaab`bcddZcafgfde
 ```
 
 This read has more consistent quality at its end than the first
@@ -374,12 +362,8 @@ $ ls -l -h
 ```
 
 ```output
--rw-rw-r-- 1 dcuser dcuser 545M Jul  6 20:27 SRR2584863_1.fastq
--rw-rw-r-- 1 dcuser dcuser 183M Jul  6 20:29 SRR2584863_2.fastq.gz
--rw-rw-r-- 1 dcuser dcuser 309M Jul  6 20:34 SRR2584866_1.fastq.gz
--rw-rw-r-- 1 dcuser dcuser 296M Jul  6 20:37 SRR2584866_2.fastq.gz
--rw-rw-r-- 1 dcuser dcuser 124M Jul  6 20:22 SRR2589044_1.fastq.gz
--rw-rw-r-- 1 dcuser dcuser 128M Jul  6 20:24 SRR2589044_2.fastq.gz
+lrwxrwxrwx 1 root    root            65 Oct  4 22:17  YMX005645_R1.fastq -> /home/dc_workshop_YEAST/data_1/untrimmed_fastq/YMX005645_R1.fastq
+lrwxrwxrwx 1 root    root            65 Oct  4 22:18  YMX005645_R2.fastq -> /home/dc_workshop_YEAST/data_1/untrimmed_fastq/YMX005645_R2.fastq
 ```
 
 There are six FASTQ files ranging from 124M (124MB) to 545M.
