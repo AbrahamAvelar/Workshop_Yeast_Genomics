@@ -6,9 +6,8 @@ exercises: 5
 
 ::::::::::::::::::::::::::::::::::::::: objectives
 
-- Why study *E. coli*?
+- Why study *S. cerevisiae*?
 - Understand the data set.
-- What is hypermutability?
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -21,46 +20,36 @@ exercises: 5
 
 ## Background
 
-We are going to use a long-term sequencing dataset from a population of *Escherichia coli*.
+We are going to use a country-wide sequencing dataset from *Saccharomyces cerevisiae* collected from agave fermentation facilities.
 
-- **What is *E. coli*?**
-  - *E. coli* are rod-shaped bacteria that can survive under a wide variety of conditions including variable temperatures, nutrient availability, and oxygen levels. Most strains are harmless, but some are associated with food-poisoning.
+- **What is *S. cerevisiae*?**
+  - *S. cerevisiae* are unicellular fungus also known as budding yeasts. It is commonly found in fermentations of dairy, spirits, and other food. 
 
-![](fig/172px-EscherichiaColi_NIAID.jpg){alt='Wikimedia'}
 
-<!-- https://species.wikimedia.org/wiki/Escherichia_coli#/media/File:EscherichiaColi_NIAID.jpg -->
+<!-- https://es.wikipedia.org/wiki/Saccharomyces_cerevisiae#/media/Archivo:S_cerevisiae_under_DIC_microscopy.jpg -->
 
-- **Why is *E. coli* important?**
-  - *E. coli* are one of the most well-studied model organisms in science. As a single-celled organism, *E. coli* reproduces rapidly, typically doubling its population every 20 minutes, which means it can be manipulated easily in experiments. In addition, most naturally occurring strains of *E. coli* are harmless. Most importantly, the genetics of *E. coli* are fairly well understood and can be manipulated to study adaptation and evolution.
+- **Why is *S. cerevisiae* important?**
+  - *S. cerevisiae* are one of the most well-studied model organisms in science. As a single-celled organism, *S. cerevisiae* typically doubling its population every two hours in the lab, which means it can be manipulated easily in experiments. In addition, most naturally occurring strains of *S. cerevisiae* are harmless. Finally, it is a great model for eukaryotic genetics and it is easily manipulated to study molecular biology, biochemistry, adaptation, and evolution. Still, its ecological roles are currently being studied.
 
 ## The data
 
-- The data we are going to use is part of a long-term evolution experiment led by [Richard Lenski](https://en.wikipedia.org/wiki/E._coli_long-term_evolution_experiment).
+- The data we will use is part of the Yeast Genomes MX Initiative led by [Lucía Morales](https://liigh.unam.mx/profile/dra-lucia-morales/), [Alexander DeLuna](https://langebio.cinvestav.mx/Dr-Alexander-de-Luna-Fors) and [Eugenio Mancera](https://ira.cinvestav.mx/ingenieriagenetica/dr-eugenio-mancera/) at UNAM and CINVESTAV.
 
-- The experiment was designed to assess adaptation in *E. coli*. A population was propagated for more than 40,000 generations in a glucose-limited minimal medium (in most conditions glucose is the best carbon source for *E. coli*, providing faster growth than other sugars). This medium was supplemented with citrate, which *E. coli* cannot metabolize in the aerobic conditions of the experiment. Sequencing of the populations at regular time points revealed that spontaneous citrate-using variant (**Cit+**) appeared between 31,000 and 31,500 generations, causing an increase in population size and diversity. In addition, this experiment showed hypermutability in certain regions. Hypermutability is important and can help accelerate adaptation to novel environments, but also can be selected against in well-adapted populations.
+- The experiment was designed to explore the genomic diversity of Saccharomyces yeasts across a megadiverse context that surrounds the culturally and biotechnologically relevant traditional agave fermentations, which are carried on in regions that go from highland forests to lowland deserts. During the sampling, we collected samples from fermentations of other species being carried out in the same distilleries.
 
-- To see a timeline of the experiment to date, check out this [figure](https://en.wikipedia.org/wiki/E._coli_long-term_evolution_experiment#/media/File:LTEE_Timeline_as_of_May_28,_2016.png), and this paper [Blount et al. 2008: Historical contingency and the evolution of a key innovation in an experimental population of *Escherichia coli*](https://www.pnas.org/content/105/23/7899).
+- To read the first publications of the project, check out this [article describing a nationwide collection of isolates by Gallegos-Casillas et al. 2023](https://www.biorxiv.org/content/10.1101/2023.07.02.547337v1), and this [paper with the first genomic draft of *Kz. humilis* by Garcia-Ortega et al. 2022](https://journals.asm.org/doi/10.1128/mra.01154-21).
 
 ### View the metadata
 
-We will be working with three sample events from the **Ara-3** strain of this experiment, one from 5,000 generations, one from 15,000 generations, and one from 50,000 generations. The population changed substantially during the course of the experiment, and we will be exploring how (the evolution of a **Cit+** mutant and **hypermutability**) with our variant calling workflow. The metadata file associated with this lesson can be [downloaded directly here](files/Ecoli_metadata_composite.csv) or [viewed in Github](https://github.com/datacarpentry/wrangling-genomics/blob/main/episodes/files/Ecoli_metadata_composite.csv). If you would like to know details of how the file was created, you can look at [some notes and sources here](https://github.com/datacarpentry/wrangling-genomics/blob/main/episodes/files/Ecoli_metadata_composite_README.md).
-
-This metadata describes information on the *Ara-3* clones and the columns represent:
+We will be working on sequences from isolates sampled from fermentation tanks used to produce different spirits at the seven producing regions. The metadata file associated with this lesson can be [downloaded directly here]([files/Ecoli_metadata_composite.csv](https://docs.google.com/spreadsheets/d/1mQFl-YEGzwSK77qzT8YL1FSzJ5kfe2ujvHBwST1JY5s/edit?usp=sharing) 
 
 | Column           | Description                                     | 
 | ---------------- | ----------------------------------------------- |
-| strain           | strain name                                     | 
-| generation       | generation when sample frozen                   | 
-| clade            | based on parsimony-based tree                   | 
-| reference        | study the samples were originally sequenced for | 
-| population       | ancestral population group                      | 
-| mutator          | hypermutability mutant status                   | 
-| facility         | facility samples were sequenced at              | 
-| run              | Sequence read archive sample ID                 | 
-| read\_type        | library type of reads                           | 
-| read\_length      | length of reads in sample                       | 
-| sequencing\_depth | depth of sequencing                             | 
-| cit              | citrate-using mutant status                     | 
+| ID               | strain name                                     | 
+| Origin           | Where did the strain come from                  | 
+| Spirit           | What was being produced with this strain        | 
+| Read_type        | library type of reads                           | 
+
 
 :::::::::::::::::::::::::::::::::::::::  challenge
 
@@ -68,25 +57,22 @@ This metadata describes information on the *Ara-3* clones and the columns repres
 
 Based on the metadata, can you answer the following questions?
 
-1. How many different generations exist in the data?
-2. How many rows and how many columns are in this data?
-3. How many citrate+ mutants have been recorded in **Ara-3**?
-4. How many hypermutable mutants have been recorded in **Ara-3**?
+1. How many different types of spirits exist in the data?
+2. How many states are represented in this data?
+3. Why do you think are there isolates from China, USA and the French Guiana?
 
 :::::::::::::::  solution
 
 ### Solution
 
-1. 25 different generations
-2. 62 rows, 12 columns
-3. 10 citrate+ mutants
-4. 6 hypermutable mutants
+1. 8 different types of spirits
+2. 11 different states
+3. They will serve as reference
 
 :::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-<!-- can add some additional info relevant to interplay of hypermutability and Cit+ adaptations, but keep it simple for now -->
 
 :::::::::::::::::::::::::::::::::::::::: keypoints
 
