@@ -57,7 +57,7 @@ How many chromosomes does have this genome?
 ### Solution
 
 ```bash
-$ head data/ref_genome/ecoli_rel606.fasta
+$ head data/ref_genome/SACE_S288C_v1_allChr.fasta
 ```
 ```bash
 >SACE_S288C_v1_chr_01
@@ -85,14 +85,14 @@ $ head data/ref_genome/ecoli_rel606.fasta
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
-We will also download a set of trimmed FASTQ files to work with. These are small subsets of our real trimmed data,
+We will also subset trimmed FASTQ files with [seqtk](https://www.biostars.org/p/6544/#42695) to work with. These are small subsets of our real trimmed data,
 and will enable us to run our variant calling workflow quite quickly.
 
 ```bash
- 
-seqtk sample -s100 ~/dc_workshop/data/untrimmed_fastq/read1.fq 0.1 > sub1.fq
-seqtk sample -s100 ~/dc_workshop/data/untrimmed_fastq/read2.fq 0.1 > sub2.fq
-$ mv sub/ ~/dc_workshop_YEAST/data/trimmed_fastq_small
+$ mkdir  ~/dc_workshop_YEAST/data/trimmed_fastq_small
+$ cd  ~/dc_workshop_YEAST/data/trimmed_fastq_small
+$ seqtk sample -s100 ~/dc_workshop_YEAST/data/trimmed_fastq/YMX005645_R1.trimmed.fastq 0.1 > YMX005645_R1_small.fastq
+$ seqtk sample -s100 ~/dc_workshop_YEAST/data/trimmed_fastq/YMX005645_R2.trimmed.fastq 0.1 > YMX005645_R2_small.fastq
 ```
 
 You will also need to create directories for the results that will be generated as part of this workflow. We can do this in a single
@@ -100,6 +100,7 @@ line of code, because `mkdir` can accept multiple new directory
 names as input.
 
 ```bash
+$ cd ~/dc_workshop_YEAST
 $ mkdir -p results/sam results/bam results/bcf results/vcf
 ```
 
@@ -108,7 +109,7 @@ $ mkdir -p results/sam results/bam results/bcf results/vcf
 Our first step is to index the reference genome for use by BWA. Indexing allows the aligner to quickly find potential alignment sites for query sequences in a genome, which saves time during alignment. Indexing the reference only has to be run once. The only reason you would want to create a new index is if you are working with a different reference genome or you are using a different tool for alignment.
 
 ```bash
-$ bwa index data/ref_genome/ecoli_rel606.fasta
+$ bwa index data/ref_genome/SACE_S288C_v1_allChr.fasta
 ```
 
 While the index is created, you will see output that looks something like this:
@@ -116,13 +117,13 @@ While the index is created, you will see output that looks something like this:
 ```output
 [bwa_index] Pack FASTA... 0.04 sec
 [bwa_index] Construct BWT for the packed sequence...
-[bwa_index] 1.05 seconds elapse.
+[bwa_index] 2.08 seconds elapse.
 [bwa_index] Update BWT... 0.03 sec
-[bwa_index] Pack forward-only FASTA... 0.02 sec
-[bwa_index] Construct SA from BWT and Occ... 0.57 sec
+[bwa_index] Pack forward-only FASTA... 0.03 sec
+[bwa_index] Construct SA from BWT and Occ... 0.75 sec
 [main] Version: 0.7.17-r1188
-[main] CMD: bwa index data/ref_genome/ecoli_rel606.fasta
-[main] Real time: 1.765 sec; CPU: 1.715 sec
+[main] CMD: bwa index data/ref_genome/SACE_S288C_v1_allChr.fasta
+[main] Real time: 3.307 sec; CPU: 2.942 sec
 ```
 
 #### Align reads to reference genome
@@ -142,26 +143,33 @@ parameters here, your use case might require a change of parameters. *NOTE: Alwa
 and make sure the options you use are appropriate for your data.*
 
 We are going to start by aligning the reads from just one of the
-samples in our dataset (`SRR2584866`). Later, we will be
+samples in our dataset (`YMX005645`). Later, we will be
 iterating this whole process on all of our sample files.
 
 ```bash
-$ bwa mem data/ref_genome/ecoli_rel606.fasta data/trimmed_fastq_small/SRR2584866_1.trim.sub.fastq data/trimmed_fastq_small/SRR2584866_2.trim.sub.fastq > results/sam/SRR2584866.aligned.sam
+$ bwa mem data/ref_genome/SACE_S288C_v1_allChr.fasta data/trimmed_fastq_small/YMX005645_R1_small.fastq data/trimmed_fastq_small/YMX005645_R2_small.fastq > results/sam/YMX005645.aligned.sam
 ```
 
 You will see output that starts like this:
 
 ```output
 [M::bwa_idx_load_from_disk] read 0 ALT contigs
-[M::process] read 77446 sequences (10000033 bp)...
-[M::process] read 77296 sequences (10000182 bp)...
-[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (48, 36728, 21, 61)
-[M::mem_pestat] analyzing insert size distribution for orientation FF...
-[M::mem_pestat] (25, 50, 75) percentile: (420, 660, 1774)
-[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 4482)
-[M::mem_pestat] mean and std.dev: (784.68, 700.87)
-[M::mem_pestat] low and high boundaries for proper pairs: (1, 5836)
+[M::process] read 67454 sequences (10000030 bp)...
+[M::process] read 67342 sequences (10000276 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (2, 29284, 46, 0)
+[M::mem_pestat] skip orientation FF as there are not enough pairs
 [M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (252, 291, 333)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (90, 495)
+[M::mem_pestat] mean and std.dev: (293.03, 60.86)
+[M::mem_pestat] low and high boundaries for proper pairs: (9, 576)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (56, 141, 515)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 1433)
+[M::mem_pestat] mean and std.dev: (270.44, 234.23)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 1892)
+[M::mem_pestat] skip orientation RR as there are not enough pairs
+[M::mem_pestat] skip orientation RF
 ```
 
 ##### SAM/BAM format
@@ -183,10 +191,17 @@ displayed below with the different fields highlighted.
 
 ![](fig/sam_bam3.png){alt='sam\_bam2'}
 
+Reduce size of sam file
+```bash
+ head -n20 results/sam/YMX005645.aligned.sam > results/sam/output_header.sam 
+ shuf -n 100000 results/sam/YMX005645.aligned.sam | head -n 100000 > results/sam/output_random.sam 
+ cat results/sam/output_random.sam >> results/sam/output_header.sam
+```
+
 We will convert the SAM file to BAM format using the `samtools` program with the `view` command and tell this command that the input is in SAM format (`-S`) and to output BAM format (`-b`):
 
 ```bash
-$ samtools view -S -b results/sam/SRR2584866.aligned.sam > results/bam/SRR2584866.aligned.bam
+$ samtools view -S -b results/sam/output_header.sam > results/bam/output.bam #convert to bam
 ```
 
 ```output
@@ -198,7 +213,7 @@ $ samtools view -S -b results/sam/SRR2584866.aligned.sam > results/bam/SRR258486
 Next we sort the BAM file using the `sort` command from `samtools`. `-o` tells the command where to write the output.
 
 ```bash
-$ samtools sort -o results/bam/SRR2584866.aligned.sorted.bam results/bam/SRR2584866.aligned.bam 
+$ samtools sort -o results/bam/output.sorted.bam results/bam/output.bam  # sort el bam
 ```
 
 Our files are pretty small, so we will not see this output. If you run the workflow with larger files, you will see something like this:
@@ -212,7 +227,7 @@ SAM/BAM files can be sorted in multiple ways, e.g. by location of alignment on t
 You can use samtools to learn more about this bam file as well.
 
 ```bash
-samtools flagstat results/bam/SRR2584866.aligned.sorted.bam
+samtools flagstat results/bam/output.sorted.bam 
 ```
 
 This will give you the following statistics about your sorted bam file:
@@ -251,8 +266,7 @@ use the command `mpileup`. The flag `-O b` tells bcftools to generate a
 bcf format output file, `-o` specifies where to write the output file, and `-f` flags the path to the reference genome:
 
 ```bash
-$ bcftools mpileup -O b -o results/bcf/SRR2584866_raw.bcf \
--f data/ref_genome/ecoli_rel606.fasta results/bam/SRR2584866.aligned.sorted.bam 
+$ bcftools mpileup -O b -o results/bcf/output_raw.bcf -f _genome/SACE_S288C_v1_allChr.fasta results/bam/output.sorted.bam # 
 ```
 
 ```output
@@ -266,7 +280,7 @@ We have now generated a file with coverage information for every base.
 Identify SNVs using bcftools `call`. We have to specify ploidy with the flag `--ploidy`, which is one for the haploid *E. coli*. `-m` allows for multiallelic and rare-variant calling, `-v` tells the program to output variant sites only (not every site in the genome), and `-o` specifies where to write the output file:
 
 ```bash
-$ bcftools call --ploidy 1 -m -v -o results/vcf/SRR2584866_variants.vcf results/bcf/SRR2584866_raw.bcf 
+$ bcftools call --ploidy 2 -m -v -o results/vcf/output_variants.vcf results/bcf/output_raw.bcf
 ```
 
 #### Step 3: Filter and report the SNV variants in variant calling format (VCF)
@@ -274,7 +288,7 @@ $ bcftools call --ploidy 1 -m -v -o results/vcf/SRR2584866_variants.vcf results/
 Filter the SNVs for the final output in VCF format, using `vcfutils.pl`:
 
 ```bash
-$ vcfutils.pl varFilter results/vcf/SRR2584866_variants.vcf  > results/vcf/SRR2584866_final_variants.vcf
+$ vcfutils.pl varFilter results/vcf/output_variants.vcf  > results/vcf/output_final_variants.vcf
 ```
 
 :::::::::::::::::::::::::::::::::::::::::  callout
@@ -314,8 +328,8 @@ some additional information:
 ##fileformat=VCFv4.2
 ##FILTER=<ID=PASS,Description="All filters passed">
 ##bcftoolsVersion=1.8+htslib-1.8
-##bcftoolsCommand=mpileup -O b -o results/bcf/SRR2584866_raw.bcf -f data/ref_genome/ecoli_rel606.fasta results/bam/SRR2584866.aligned.sorted.bam
-##reference=file://data/ref_genome/ecoli_rel606.fasta
+##bcftoolsCommand=mpileup -O b -o results/bcf/SRR2584866_raw.bcf -f data/ref_genome/SACE_S288C_v1_allChr.fasta results/bam/SRR2584866.aligned.sorted.bam
+##reference=file://data/ref_genome/SACE_S288C_v1_allChr.fasta
 ##contig=<ID=CP000819.1,length=4629812>
 ##ALT=<ID=*,Description="Represents allele(s) other than observed.">
 ##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
@@ -433,7 +447,7 @@ software installation and transfer of files.
 In order for us to visualize the alignment files, we will need to index the BAM file using `samtools`:
 
 ```bash
-$ samtools index results/bam/SRR2584866.aligned.sorted.bam
+$ samtools index results/bam/output.sorted.bam
 ```
 
 #### Viewing with `tview`
@@ -445,7 +459,7 @@ It uses different colors to display mapping quality or base quality, subjected t
 In order to visualize our mapped reads, we use `tview`, giving it the sorted bam file and the reference file:
 
 ```bash
-$ samtools tview results/bam/SRR2584866.aligned.sorted.bam data/ref_genome/ecoli_rel606.fasta
+$ samtools tview results/bam/output.sorted.bam _genome/SACE_S288C_v1_allChr.fasta
 ```
 
 ```output
@@ -498,7 +512,7 @@ position 4377265? What is the canonical nucleotide in that position?
 ### Solution
 
 ```bash
-$ samtools tview ~/dc_workshop_YEAST/results/bam/SRR2584866.aligned.sorted.bam ~/dc_workshop_YEAST/data/ref_genome/ecoli_rel606.fasta
+$ samtools tview ~/dc_workshop_YEAST/results/bam/SRR2584866.aligned.sorted.bam ~/dc_workshop_YEAST/data/ref_genome/SACE_S288C_v1_allChr.fasta
 ```
 
 Then type `g`. In the dialogue box, type `CP000819.1:4377265`.
@@ -532,7 +546,7 @@ local computer (not your AWS instance).
 ```bash
 $ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop_YEAST/results/bam/SRR2584866.aligned.sorted.bam ~/Desktop/files_for_igv
 $ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop_YEAST/results/bam/SRR2584866.aligned.sorted.bam.bai ~/Desktop/files_for_igv
-$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop_YEAST/data/ref_genome/ecoli_rel606.fasta ~/Desktop/files_for_igv
+$ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop_YEAST/data/ref_genome/SACE_S288C_v1_allChr.fasta ~/Desktop/files_for_igv
 $ scp dcuser@ec2-34-203-203-131.compute-1.amazonaws.com:~/dc_workshop_YEAST/results/vcf/SRR2584866_final_variants.vcf ~/Desktop/files_for_igv
 ```
 
@@ -542,7 +556,7 @@ Next, we need to open the IGV software. If you have not done so already, you can
 to unzip it, and then drag the program into your Applications folder.
 
 1. Open IGV.
-2. Load our reference genome file (`ecoli_rel606.fasta`) into IGV using the **"Load Genomes from File..."** option under the **"Genomes"** pull-down menu.
+2. Load our reference genome file (`SACE_S288C_v1_allChr.fasta`) into IGV using the **"Load Genomes from File..."** option under the **"Genomes"** pull-down menu.
 3. Load our BAM file (`SRR2584866.aligned.sorted.bam`) using the **"Load from File..."** option under the **"File"** pull-down menu.
 4. Do the same with our VCF file (`SRR2584866_final_variants.vcf`).
 
