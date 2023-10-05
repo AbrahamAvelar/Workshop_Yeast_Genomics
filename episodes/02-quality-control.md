@@ -56,7 +56,7 @@ Here we are using the `-p` option for `mkdir`. This option allows `mkdir` to cre
 It will take about 15 minutes to download the files.
 
 ```bash
-cd ~/dc_workshop/data/untrimmed_fastq
+cd ~/dc_workshop_YEAST/data/untrimmed_fastq
 ls
 ```
 
@@ -337,7 +337,7 @@ Here, we see positions within the read in which the boxes span a much wider rang
 We will now assess the quality of the reads that we downloaded. First, make sure you are still in the `untrimmed_fastq` directory
 
 ```bash
-$ cd ~/dc_workshop/data/untrimmed_fastq/
+$ cd ~/dc_workshop_YEAST/data/untrimmed_fastq/
 ```
 
 :::::::::::::::::::::::::::::::::::::::  challenge
@@ -431,16 +431,16 @@ will move these
 output files into a new directory within our `results/` directory.
 
 ```bash
-$ mkdir -p ~/dc_workshop/results/fastqc_untrimmed_reads
-$ mv *.zip ~/dc_workshop/results/fastqc_untrimmed_reads/
-$ mv *.html ~/dc_workshop/results/fastqc_untrimmed_reads/
+$ mkdir -p ~/dc_workshop_YEAST/results/fastqc_untrimmed_reads
+$ mv *.zip ~/dc_workshop_YEAST/results/fastqc_untrimmed_reads/
+$ mv *.html ~/dc_workshop_YEAST/results/fastqc_untrimmed_reads/
 ```
 
 Now we can navigate into this results directory and do some closer
 inspection of our output files.
 
 ```bash
-$ cd ~/dc_workshop/results/fastqc_untrimmed_reads/
+$ cd ~/dc_workshop_YEAST/results/fastqc_untrimmed_reads/
 ```
 
 ### Viewing the FastQC results
@@ -473,7 +473,7 @@ $ mkdir -p ~/Desktop/fastqc_html
 Now we can transfer our HTML files to our local computer using `scp`.
 
 ```bash
-$ scp dcuser@ec2-34-238-162-94.compute-1.amazonaws.com:~/dc_workshop/results/fastqc_untrimmed_reads/*.html ~/Desktop/fastqc_html
+$ scp dcuser@ec2-34-238-162-94.compute-1.amazonaws.com:~/dc_workshop_YEAST/results/fastqc_untrimmed_reads/*.html ~/Desktop/fastqc_html
 ```
 
 :::::::::::::::::::::::::::::::::::::::::  callout
@@ -485,13 +485,13 @@ likely that a `no matches found` error will be displayed. The reason for this is
 ("\*") is not correctly interpreted. To fix this problem the wildcard needs to be escaped with a "\\":
 
 ```bash
-$ scp dcuser@ec2-34-238-162-94.compute-1.amazonaws.com:~/dc_workshop/results/fastqc_untrimmed_reads/\*.html ~/Desktop/fastqc_html
+$ scp dcuser@ec2-34-238-162-94.compute-1.amazonaws.com:~/dc_workshop_YEAST/results/fastqc_untrimmed_reads/\*.html ~/Desktop/fastqc_html
 ```
 
 Alternatively, you can put the whole path into quotation marks:
 
 ```bash
-$ scp "dcuser@ec2-34-238-162-94.compute-1.amazonaws.com:~/dc_workshop/results/fastqc_untrimmed_reads/*.html" ~/Desktop/fastqc_html
+$ scp "dcuser@ec2-34-238-162-94.compute-1.amazonaws.com:~/dc_workshop_YEAST/results/fastqc_untrimmed_reads/*.html" ~/Desktop/fastqc_html
 ```
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -568,7 +568,7 @@ in your terminal program that is connected to your AWS instance
 our results subdirectory.
 
 ```bash
-$ cd ~/dc_workshop/results/fastqc_untrimmed_reads/
+$ cd ~/dc_workshop_YEAST/results/fastqc_untrimmed_reads/
 $ ls
 ```
 
@@ -729,7 +729,7 @@ using the `cat` command. We will call this `fastqc_summaries.txt` and move
 it to `~/dc_workshop/docs`.
 
 ```bash
-$ cat */summary.txt > ~/dc_workshop/docs/fastqc_summaries.txt
+$ cat */summary.txt > ~/dc_workshop_YEAST/docs/fastqc_summaries.txt
 ```
 
 :::::::::::::::::::::::::::::::::::::::  challenge
@@ -746,7 +746,7 @@ test(s) did those samples fail?
 We can get the list of all failed tests using `grep`.
 
 ```bash
-$ cd ~/dc_workshop/docs
+$ cd ~/dc_workshop_YEAST/docs
 $ grep FAIL fastqc_summaries.txt
 ```
 
